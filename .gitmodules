@@ -1,0 +1,3 @@
+[submodule "pseudo_dojo"]
+	path = pseudo_dojo
+	url = https://github.com/abinit/pseudo_dojo.git
