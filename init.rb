@@ -1,3 +1,4 @@
+#! /usr/bin/env ruby
 require 'open-uri'
 require 'zlib'
 require 'archive/tar/minitar'
