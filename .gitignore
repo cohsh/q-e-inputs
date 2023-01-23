@@ -1,1 +1,4 @@
 ref.sh
+
+.cache/
+pseudos/*/
