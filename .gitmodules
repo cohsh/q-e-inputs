@@ -1,0 +1,6 @@
+[submodule "ONCVPSP-PBE-SR"]
+	path = pseudos/ONCVPSP-PBE-SR
+	url = https://github.com/PseudoDojo/ONCVPSP-PBE-SR.git
+[submodule "ONCVPSP-PBE-FR"]
+	path = pseudos/ONCVPSP-PBE-FR
+	url = https://github.com/PseudoDojo/ONCVPSP-PBE-FR.git
