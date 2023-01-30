@@ -4,3 +4,6 @@
 [submodule "ONCVPSP-PBE-FR"]
 	path = pseudos/ONCVPSP-PBE-FR
 	url = https://github.com/PseudoDojo/ONCVPSP-PBE-FR.git
+[submodule "qeinput"]
+	path = qeinput
+	url = https://github.com/cohsh/qeinput.git
