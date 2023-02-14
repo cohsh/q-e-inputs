@@ -1,30 +1,43 @@
+import os
+
 from qeinput.material import Material
-from qeinput.inputs import SlurmJob, InputPWSCF, InputPWNSCF
+from qeinput.inputs import SlurmJob, InputPWSCF
+
+
+KEY = "Your API key of the Materials Project"
+
+QE_DIR = "~/q-e/bin/"
+PROJECT_DIR = "./test/"
+PSEUDO_DIR = "../../pseudos/local"
+OUTDIR = "./tmp"
+
+job = SlurmJob("PartitionName", 1, 128, 1)
+
+
+def prepare_scf(mp_id: str):
+    material = Material(KEY, mp_id)
+    prefix = material.formula_pretty
+    path = PROJECT_DIR + prefix + "/"
+
+    os.makedirs(path)
+
+    input_scf = InputPWSCF(material, PSEUDO_DIR, OUTDIR, 60, [8, 8, 8])
+
+    infile = prefix + ".scf.in"
+    outfile = prefix + ".scf.out"
+    input_scf.generate(path + infile)
+
+    job.add_srun(QE_DIR + "pw.x", "", infile, outfile)
 
 
 def main():
-    pseudo_dir = "./pseudos/local"
-    job = SlurmJob("PartitionName", 1, 128, 1)
+    os.makedirs(PROJECT_DIR)
+    mp_ids = ["mp-149", "mp-2534"]
 
-    key = "Your API key of the Materials Project"
+    for mp_id in mp_ids:
+        prepare_scf(mp_id)
 
-    Si = Material(key, "mp-149")
-    prefix = Si.formula_pretty
-
-    Si_input_scf = InputPWSCF(Si, pseudo_dir, 60, [8, 8, 8])
-    Si_input_nscf = InputPWNSCF(Si, pseudo_dir, 60,
-                                [[0.0, 0.0, 0.0], [0.5, 0.5, 0.5]], 10)
-
-    Si_inputs = {"scf": Si_input_scf, "nscf": Si_input_nscf}
-
-    for calc, Si_input in Si_inputs.items():
-        infile = prefix + "." + calc + ".in"
-        outfile = prefix + "." + calc + ".out"
-        Si_input.generate(infile)
-
-        job.add_srun("pw.x", "", infile, outfile)
-
-    job.generate("job.sh")
+    job.generate(PROJECT_DIR + "job.sh")
 
 
 if __name__ == "__main__":
