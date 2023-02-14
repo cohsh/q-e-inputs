@@ -1,5 +1,5 @@
 # q-e-template
-My template of Quantum Espresso
+My template of Quantum ESPRESSO
 
 ## Install
 ```Shell
