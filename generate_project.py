@@ -1,7 +1,7 @@
 import os
 
 from qeinput.material import Material
-from qeinput.inputs import SlurmJob, InputPWSCF
+from qeinput.inputs import SlurmJob, InputPWSCF, InputPWNSCF
 
 
 KEY = "Your API key of the Materials Project"
@@ -15,19 +15,37 @@ OUTDIR = "tmp/"
 job = SlurmJob("PartitionName", 1, 128, 1)
 
 
-def prepare_scf(mp_id: str):
-    material = Material(KEY, mp_id)
+def prepare_scf(material: Material, ecutwfc: int, k_points: list):
     prefix = material.formula_pretty
     path = PROJECT_DIR + prefix + "/"
 
     if not os.path.exists(path):
         os.makedirs(path)
 
-    input_scf = InputPWSCF(material, PSEUDO_DIR, OUTDIR, 60, [8, 8, 8])
+    input_scf = InputPWSCF(material, PSEUDO_DIR, OUTDIR, ecutwfc, k_points)
 
-    infile = prefix + ".scf.in"
-    outfile = prefix + ".scf.out"
+    infile = prefix + ".pw.scf.in"
+    outfile = prefix + ".pw.scf.out"
     input_scf.generate(path + infile)
+
+    job.add_text("cd {dir}\n".format(dir=PWD+path))
+    job.add_srun(QE_DIR + "pw.x", "", infile, outfile)
+    job.add_text("\n")
+
+
+def prepare_nscf(material: Material, ecutwfc: int, k_points: list, nbnd: int):
+    prefix = material.formula_pretty
+    path = PROJECT_DIR + prefix + "/"
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    input_nscf = InputPWNSCF(material, PSEUDO_DIR, OUTDIR, ecutwfc,
+                             k_points, nbnd)
+
+    infile = prefix + ".pw.nscf.in"
+    outfile = prefix + ".pw.nscf.out"
+    input_nscf.generate(path + infile)
 
     job.add_text("cd {dir}\n".format(dir=PWD+path))
     job.add_srun(QE_DIR + "pw.x", "", infile, outfile)
@@ -41,7 +59,9 @@ def main():
     mp_ids = ["mp-149", "mp-2534"]
 
     for mp_id in mp_ids:
-        prepare_scf(mp_id)
+        material = Material(KEY, mp_id)
+        prepare_scf(material, 60, [8, 8, 8])
+        prepare_nscf(material, 60, [[0.0, 0.0, 0.0]], 10)
 
     job.generate(PROJECT_DIR + "job.sh")
 
