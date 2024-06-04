@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 from qeinput.material import Material
@@ -6,14 +7,17 @@ from qeinput.inputs import SlurmJob, InputPWSCF, InputPWNSCF
 
 KEY = "Your API key of the Materials Project"
 
-PWD = os.getcwd() + "/"
+PWD = "Path of q-e-workspace" + "/"
 QE_DIR = "~/q-e/bin/"
 PROJECT_DIR = "test/"
 PSEUDO_DIR = PWD + "pseudos/local"
 OUTDIR = "tmp/"
+PARTITION_NAME = "PartitionName"
+N_NODES = 1
+N_MPI_RANK = 128
+N_OMP = 1
 
-job = SlurmJob("PartitionName", 1, 128, 1)
-
+job = SlurmJob(PARTITION_NAME, N_NODES, N_MPI_RANK, N_OMP)
 
 def prepare_scf(material: Material, ecutwfc: int, k_points: list):
     prefix = material.formula_pretty
