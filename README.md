@@ -9,4 +9,9 @@ cd q-e-workspace
 ```
 
 ## Usage
-1. Edit and execute `./generate_project.py`
+1. At local
+    1. Edit parameters in `./generate_project.py`
+    2. Execute `./generate_project.py`
+
+2. At the computer that executes calculations
+    1. Apply the changes (ex: by `scp` or `git pull`).
