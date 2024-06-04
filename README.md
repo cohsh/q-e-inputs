@@ -8,10 +8,17 @@ cd q-e-workspace
 ./install.py
 ```
 
-## Usage
-1. At local
-    1. Edit parameters in `./generate_project.py`
-    2. Execute `./generate_project.py`
+## Environment
+local ↔️ remote
 
-2. At the computer that executes calculations
-    1. Apply the changes (ex: by `scp` or `git pull`).
+## Usage
+### At local 
+1. Install
+2. Edit parameters in `./generate_project.py`
+3. Execute `./generate_project.py`
+4. Send input and job files to the remote computer.
+
+### At remote
+1. Install
+2. Receive input and job files from the local computer.
+3. Execute Quantum ESPRESSO by submitting `job.sh`.
